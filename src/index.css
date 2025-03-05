@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -44,6 +45,12 @@
     --ring: 224 71.4% 4.1%;
 
     --radius: 0.85rem;
+    
+    /* Productivity custom colors */
+    --productivity-high: 142 76% 52%;
+    --productivity-medium: 25 95% 53%;
+    --productivity-low: 0 84% 60%;
+    --productivity-bg: 220 13% 91% / 0.3;
   }
 
   .dark {
@@ -74,6 +81,12 @@
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 216 12.2% 83.9%;
+    
+    /* Productivity custom colors in dark mode */
+    --productivity-high: 142 76% 45%;
+    --productivity-medium: 25 95% 50%;
+    --productivity-low: 0 84% 60%;
+    --productivity-bg: 215 27.9% 16.9% / 0.5;
   }
 }
 
@@ -104,16 +117,28 @@
   }
   
   /* Productivity Status Indicators */
-  .status-high {
-    @apply text-productivity-high;
+  .status-high, .text-productivity-high {
+    @apply text-[hsl(var(--productivity-high))];
   }
   
-  .status-medium {
-    @apply text-productivity-medium;
+  .status-medium, .text-productivity-medium {
+    @apply text-[hsl(var(--productivity-medium))];
   }
   
-  .status-low {
-    @apply text-productivity-low;
+  .status-low, .text-productivity-low {
+    @apply text-[hsl(var(--productivity-low))];
+  }
+  
+  .border-productivity-high {
+    @apply border-[hsl(var(--productivity-high))];
+  }
+  
+  .border-productivity-medium {
+    @apply border-[hsl(var(--productivity-medium))];
+  }
+  
+  .border-productivity-low {
+    @apply border-[hsl(var(--productivity-low))];
   }
 
   /* Animations */
@@ -124,4 +149,44 @@
   .animate-number {
     @apply animate-number-change;
   }
+  
+  .animate-fade-in {
+    @apply opacity-0 animate-fade-in;
+  }
+}
+
+/* Animation keyframes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes number-change {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
 }

@@ -1,49 +1,21 @@
 
 import React from "react";
-import { format } from "date-fns";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProductivityEntry } from "./EntryForm";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { ProductivityEntry } from "@/types/productivity";
+import { formatDateSafely, formatTimeSafely, getScoreColor, getScoreTextColor } from "@/utils/productivityUtils";
 
 interface EntryCardProps {
   entry: ProductivityEntry;
   onDelete: (id: string) => void;
+  isReadOnly?: boolean;
 }
 
-export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete }) => {
+export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete, isReadOnly = false }) => {
   const { id, date, score, category, description, createdAt } = entry;
-  
-  const getScoreColor = (score: number): string => {
-    if (score >= 8) return "border-productivity-high";
-    if (score >= 5) return "border-productivity-medium";
-    return "border-productivity-low";
-  };
-
-  const getScoreTextColor = (score: number): string => {
-    if (score >= 8) return "text-productivity-high";
-    if (score >= 5) return "text-productivity-medium";
-    return "text-productivity-low";
-  };
-
-  // Safe date formatting with error handling
-  const formatDateSafely = (dateString: string) => {
-    try {
-      return format(new Date(dateString), "MMMM d, yyyy");
-    } catch (error) {
-      return "Invalid date";
-    }
-  };
-
-  const formatTimeSafely = (dateObj: Date) => {
-    try {
-      return format(new Date(dateObj), "h:mm a");
-    } catch (error) {
-      return "Invalid time";
-    }
-  };
   
   return (
     <Card className={cn(
@@ -76,16 +48,18 @@ export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete }) => {
           <span className="text-xs text-muted-foreground">
             {formatTimeSafely(createdAt)}
           </span>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => onDelete(id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
+          {!isReadOnly && (
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onDelete(id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

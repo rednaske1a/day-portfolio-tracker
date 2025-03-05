@@ -10,7 +10,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { 
@@ -23,30 +22,12 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
+import { PRODUCTIVITY_CATEGORIES, ProductivityEntry } from "@/types/productivity";
+import { getProductivityColor, getProductivityStatus } from "@/utils/productivityUtils";
 
 interface EntryFormProps {
   onAddEntry: (entry: ProductivityEntry) => void;
 }
-
-export interface ProductivityEntry {
-  id: string;
-  date: string;
-  score: number;
-  category: string;
-  description: string;
-  createdAt: Date;
-}
-
-const categories = [
-  "Work",
-  "Study",
-  "Exercise",
-  "Creative",
-  "Social",
-  "Personal Project",
-  "Self-care",
-  "Other"
-];
 
 export const EntryForm: React.FC<EntryFormProps> = ({ onAddEntry }) => {
   const [open, setOpen] = useState(false);
@@ -74,6 +55,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({ onAddEntry }) => {
         category: category || "Other",
         description,
         createdAt: new Date(),
+        userId: "current"
       };
       
       onAddEntry(newEntry);
@@ -91,12 +73,6 @@ export const EntryForm: React.FC<EntryFormProps> = ({ onAddEntry }) => {
     if (score >= 8) return "Highly Productive";
     if (score >= 5) return "Moderately Productive";
     return "Low Productivity";
-  };
-
-  const getProductivityColor = (score: number): string => {
-    if (score >= 8) return "status-high";
-    if (score >= 5) return "status-medium";
-    return "status-low";
   };
 
   return (
@@ -142,7 +118,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({ onAddEntry }) => {
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((cat) => (
+                  {PRODUCTIVITY_CATEGORIES.map((cat) => (
                     <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                   ))}
                 </SelectContent>
