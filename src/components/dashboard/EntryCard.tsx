@@ -28,7 +28,22 @@ export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete }) => {
     return "text-productivity-low";
   };
 
-  const formattedDate = new Date(date);
+  // Safe date formatting with error handling
+  const formatDateSafely = (dateString: string) => {
+    try {
+      return format(new Date(dateString), "MMMM d, yyyy");
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
+  const formatTimeSafely = (dateObj: Date) => {
+    try {
+      return format(new Date(dateObj), "h:mm a");
+    } catch (error) {
+      return "Invalid time";
+    }
+  };
   
   return (
     <Card className={cn(
@@ -38,7 +53,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete }) => {
       <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
         <div className="flex flex-col">
           <span className="font-medium text-sm">
-            {format(formattedDate, "MMMM d, yyyy")}
+            {formatDateSafely(date)}
           </span>
           <Badge variant="outline" className="mt-1 w-fit">
             {category}
@@ -59,7 +74,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete }) => {
         </p>
         <div className="flex justify-between items-center">
           <span className="text-xs text-muted-foreground">
-            {format(new Date(createdAt), "h:mm a")}
+            {formatTimeSafely(createdAt)}
           </span>
           <div className="flex gap-2">
             <Button

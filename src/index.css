@@ -1,15 +1,9 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Inter var';
-  src: url('https://rsms.me/inter/font-files/Inter.var.woff2?v=3.19') format('woff2');
-  font-weight: 100 900;
-  font-display: swap;
-  font-style: normal;
-}
+/* Using Google Fonts for Inter instead of direct URL */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @font-face {
   font-family: 'JetBrains Mono';
@@ -90,6 +84,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

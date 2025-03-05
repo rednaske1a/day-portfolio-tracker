@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { EntryForm, ProductivityEntry } from "./EntryForm";
 import { EntryCard } from "./EntryCard";
@@ -22,7 +21,20 @@ export const Dashboard: React.FC = () => {
     
     setTimeout(() => {
       if (storedEntries) {
-        setEntries(JSON.parse(storedEntries));
+        try {
+          const parsedEntries = JSON.parse(storedEntries);
+          // Ensure dates are valid before setting state
+          const validEntries = parsedEntries.map((entry: ProductivityEntry) => ({
+            ...entry,
+            createdAt: new Date(entry.createdAt)
+          }));
+          setEntries(validEntries);
+        } catch (error) {
+          // If there's an error parsing, use sample entries
+          const sampleEntries = getSampleEntries();
+          setEntries(sampleEntries);
+          localStorage.setItem('productivity_entries', JSON.stringify(sampleEntries));
+        }
       } else {
         // Add some sample data for demonstration
         const sampleEntries = getSampleEntries();
@@ -289,38 +301,41 @@ export const Dashboard: React.FC = () => {
   );
 };
 
-// Sample data for demonstration
 function getSampleEntries(): ProductivityEntry[] {
   const today = new Date();
-  const yesterday = new Date(today);
+  const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const twoDaysAgo = new Date(today);
+  const twoDaysAgo = new Date();
   twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  
+  const todayIso = today.toISOString().split('T')[0];
+  const yesterdayIso = yesterday.toISOString().split('T')[0];
+  const twoDaysAgoIso = twoDaysAgo.toISOString().split('T')[0];
   
   return [
     {
       id: "1",
-      date: today.toISOString().split('T')[0],
+      date: todayIso,
       score: 8,
       category: "Work",
       description: "Completed major project milestone ahead of schedule",
-      createdAt: new Date(today.setHours(14, 30)),
+      createdAt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14, 30),
     },
     {
       id: "2",
-      date: yesterday.toISOString().split('T')[0],
+      date: yesterdayIso,
       score: 6,
       category: "Study",
       description: "Reviewed course materials and prepared for assessment",
-      createdAt: new Date(yesterday.setHours(19, 15)),
+      createdAt: new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 19, 15),
     },
     {
       id: "3",
-      date: twoDaysAgo.toISOString().split('T')[0],
+      date: twoDaysAgoIso,
       score: 9,
       category: "Exercise",
       description: "Intense workout session and achieved personal best",
-      createdAt: new Date(twoDaysAgo.setHours(8, 0)),
+      createdAt: new Date(twoDaysAgo.getFullYear(), twoDaysAgo.getMonth(), twoDaysAgo.getDate(), 8, 0),
     },
   ];
 }
