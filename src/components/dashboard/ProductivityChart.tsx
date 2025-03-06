@@ -2,7 +2,6 @@
 import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, TooltipProps } from "recharts";
-import { format } from "date-fns";
 import { ProductivityEntry } from "@/types/productivity";
 import { calculateAverageScore, prepareChartData } from "@/utils/productivityUtils";
 

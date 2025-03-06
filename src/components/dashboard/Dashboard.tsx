@@ -6,7 +6,7 @@ import { ProductivityStats } from "./ProductivityStats";
 import { RecentActivity } from "./RecentActivity";
 import { EntriesList } from "./EntriesList";
 import { UserSelector } from "./UserSelector";
-import { User } from "@/types/productivity";
+import { User, ProductivityEntry } from "@/types/productivity";
 import { toast } from "sonner";
 import { 
   addProductivityEntry, 
@@ -17,7 +17,7 @@ import {
 } from "@/services/productivityService";
 
 export const Dashboard: React.FC = () => {
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState<ProductivityEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUserId, setSelectedUserId] = useState("current");
@@ -48,7 +48,7 @@ export const Dashboard: React.FC = () => {
     }
   }, [entries, isLoading, selectedUserId]);
 
-  const handleAddEntry = (entry) => {
+  const handleAddEntry = (entry: ProductivityEntry) => {
     if (selectedUserId !== "current") {
       toast.error("Permission denied", {
         description: "You can only add entries to your own portfolio"
@@ -60,7 +60,7 @@ export const Dashboard: React.FC = () => {
     setEntries(updatedEntries);
   };
 
-  const handleDeleteEntry = (id) => {
+  const handleDeleteEntry = (id: string) => {
     if (selectedUserId !== "current") {
       toast.error("Permission denied", {
         description: "You can only delete entries from your own portfolio"
@@ -75,7 +75,7 @@ export const Dashboard: React.FC = () => {
     });
   };
 
-  const handleUserChange = (userId) => {
+  const handleUserChange = (userId: string) => {
     setSelectedUserId(userId);
     loadData(userId);
   };

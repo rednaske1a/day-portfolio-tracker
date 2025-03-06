@@ -23,7 +23,7 @@ import { Slider } from "@/components/ui/slider";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { PRODUCTIVITY_CATEGORIES, ProductivityEntry } from "@/types/productivity";
-import { getScoreTextColor, getProductivityStatus } from "@/utils/productivityUtils";
+import { getScoreTextColor } from "@/utils/productivityUtils";
 
 interface EntryFormProps {
   onAddEntry: (entry: ProductivityEntry) => void;

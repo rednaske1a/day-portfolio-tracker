@@ -1,7 +1,8 @@
 
-import { format, isSameDay, subDays } from "date-fns";
+import { format, isSameDay, subDays, parseISO } from "date-fns";
 import { ProductivityEntry } from "@/types/productivity";
 
+// Color utilities for score visualization
 export const getScoreColor = (score: number): string => {
   if (score >= 8) return "border-productivity-high";
   if (score >= 5) return "border-productivity-medium";
@@ -20,12 +21,13 @@ export const getProductivityStatus = (score: number) => {
   return { label: "Low", className: "bg-productivity-low/10 text-productivity-low" };
 };
 
-// Safe date formatting with error handling
+// Safe date formatting with robust error handling
 export const formatDateSafely = (dateString: string) => {
   try {
-    return format(new Date(dateString), "MMMM d, yyyy");
+    // Handle both ISO strings and date objects
+    return format(typeof dateString === 'string' ? parseISO(dateString) : dateString, "MMMM d, yyyy");
   } catch (error) {
-    console.error("Date formatting error:", error);
+    console.error("Date formatting error:", error, "Invalid date:", dateString);
     return "Invalid date";
   }
 };
@@ -34,15 +36,16 @@ export const formatTimeSafely = (dateObj: Date) => {
   try {
     return format(new Date(dateObj), "h:mm a");
   } catch (error) {
-    console.error("Time formatting error:", error);
+    console.error("Time formatting error:", error, "Invalid date object:", dateObj);
     return "Invalid time";
   }
 };
 
+// Analytics utilities
 export const calculateAverageScore = (entries: ProductivityEntry[]): number => {
   if (entries.length === 0) return 0;
   const sum = entries.reduce((acc, entry) => acc + entry.score, 0);
-  return Math.round((sum / entries.length) * 10) / 10;
+  return parseFloat((sum / entries.length).toFixed(1));
 };
 
 export const getTodayScore = (entries: ProductivityEntry[]): number => {
@@ -51,7 +54,7 @@ export const getTodayScore = (entries: ProductivityEntry[]): number => {
   if (todayEntries.length === 0) return 0;
   
   const sum = todayEntries.reduce((acc, entry) => acc + entry.score, 0);
-  return Math.round((sum / todayEntries.length) * 10) / 10;
+  return parseFloat((sum / todayEntries.length).toFixed(1));
 };
 
 export const getMostProductiveCategory = (entries: ProductivityEntry[]): string => {
@@ -81,6 +84,7 @@ export const getMostProductiveCategory = (entries: ProductivityEntry[]): string 
   return bestCategory;
 };
 
+// Chart data preparation with proper error handling
 export const prepareChartData = (entries: ProductivityEntry[], days = 7) => {
   const today = new Date();
   // Create an array representing the last [days] days
@@ -96,18 +100,18 @@ export const prepareChartData = (entries: ProductivityEntry[], days = 7) => {
   // Fill in scores for days that have entries
   entries.forEach(entry => {
     try {
-      const entryDate = new Date(entry.date);
+      const entryDate = parseISO(entry.date);
       const dayData = dateRange.find(d => isSameDay(d.date, entryDate));
       if (dayData) {
         // If multiple entries on the same day, use the average
         if (dayData.value > 0) {
-          dayData.value = (dayData.value + entry.score) / 2;
+          dayData.value = parseFloat(((dayData.value + entry.score) / 2).toFixed(1));
         } else {
           dayData.value = entry.score;
         }
       }
     } catch (error) {
-      console.error("Error processing entry date:", error);
+      console.error("Error processing entry date:", error, "Entry:", entry);
     }
   });
 

@@ -6,7 +6,7 @@ export interface ProductivityEntry {
   category: string;
   description: string;
   createdAt: Date;
-  userId?: string; // Added for multi-user support
+  userId: string; // Used for multi-user support
 }
 
 export interface User {

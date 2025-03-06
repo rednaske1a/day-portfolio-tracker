@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -46,7 +46,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete, isReadOnl
         </p>
         <div className="flex justify-between items-center">
           <span className="text-xs text-muted-foreground">
-            {formatTimeSafely(createdAt)}
+            {createdAt instanceof Date ? formatTimeSafely(createdAt) : "Invalid time"}
           </span>
           {!isReadOnly && (
             <div className="flex gap-2">

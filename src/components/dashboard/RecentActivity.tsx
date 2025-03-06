@@ -1,48 +1,61 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import { ProductivityEntry } from "@/types/productivity";
-import { getProductivityStatus } from "@/utils/productivityUtils";
+import { formatTimeSafely, getScoreTextColor } from "@/utils/productivityUtils";
+import { cn } from "@/lib/utils";
 
 interface RecentActivityProps {
   entries: ProductivityEntry[];
 }
 
 export const RecentActivity: React.FC<RecentActivityProps> = ({ entries }) => {
+  // Sort entries by creation time (newest first)
+  const sortedEntries = [...entries].sort((a, b) => {
+    if (a.createdAt instanceof Date && b.createdAt instanceof Date) {
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    }
+    return 0;
+  });
+  
+  // Take only the most recent 5 entries
+  const recentEntries = sortedEntries.slice(0, 5);
+  
   return (
-    <Card className="glass-card">
+    <Card className="glass-card h-full">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium flex items-center">
-          <Clock className="h-5 w-5 mr-2 text-primary" />
-          Recent Activity
-        </CardTitle>
+        <CardTitle className="text-xl">Recent Activity</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="max-h-[200px] overflow-y-auto p-4 space-y-2">
-          {entries.slice(0, 5).map(entry => (
-            <div key={entry.id} className="flex items-center border-b border-border pb-2 last:border-0">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3 bg-productivity-bg">
-                <span className={cn(
-                  "text-sm font-semibold",
-                  getProductivityStatus(entry.score).className
-                )}>
-                  {entry.score}
-                </span>
+        {recentEntries.length > 0 ? (
+          <div className="px-4 divide-y divide-white/5">
+            {recentEntries.map(entry => (
+              <div key={entry.id} className="py-3 flex items-center justify-between">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs">
+                      {entry.category}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      {entry.createdAt instanceof Date ? formatTimeSafely(entry.createdAt) : "Invalid time"}
+                    </span>
+                  </div>
+                  <p className="text-sm mt-1 line-clamp-1">
+                    {entry.description || "No description"}
+                  </p>
+                </div>
+                <div className={cn("font-mono font-semibold", getScoreTextColor(entry.score))}>
+                  {entry.score}/10
+                </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <p className="text-sm font-medium truncate">{entry.category}</p>
-                <p className="text-xs text-muted-foreground truncate">{entry.description}</p>
-              </div>
-            </div>
-          ))}
-          {entries.length === 0 && (
-            <div className="text-center py-4 text-muted-foreground">
-              No activity yet
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="px-4 py-6 text-center">
+            <p className="text-muted-foreground">No recent activity</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
