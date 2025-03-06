@@ -23,7 +23,7 @@ import { Slider } from "@/components/ui/slider";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { PRODUCTIVITY_CATEGORIES, ProductivityEntry } from "@/types/productivity";
-import { getProductivityColor, getProductivityStatus } from "@/utils/productivityUtils";
+import { getScoreTextColor, getProductivityStatus } from "@/utils/productivityUtils";
 
 interface EntryFormProps {
   onAddEntry: (entry: ProductivityEntry) => void;
@@ -96,7 +96,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({ onAddEntry }) => {
           <div className="space-y-6 py-6">
             <div className="space-y-4">
               <Label className="text-base">
-                Productivity Score: <span className={getProductivityColor(score)}>{score}/10</span> 
+                Productivity Score: <span className={getScoreTextColor(score)}>{score}/10</span> 
                 <span className="ml-2 text-sm text-muted-foreground">({getProductivityLabel(score)})</span>
               </Label>
               <Slider
