@@ -143,15 +143,11 @@
 
   /* Animations */
   .animate-enter {
-    @apply animate-slide-up;
+    animation: slide-up 0.3s ease-out;
   }
   
   .animate-number {
-    @apply animate-number-change;
-  }
-  
-  .animate-fade-in {
-    @apply opacity-0 animate-fade-in;
+    animation: number-change 0.5s ease-out;
   }
 }
 
@@ -187,6 +183,8 @@
   }
 }
 
+/* Custom animations that don't rely on @apply */
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
 }
+
