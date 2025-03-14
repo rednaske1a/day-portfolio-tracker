@@ -12,6 +12,9 @@ interface EntriesListProps {
 }
 
 export const EntriesList: React.FC<EntriesListProps> = ({ entries, onDelete, isReadOnly = false }) => {
+  const today = new Date().toISOString().split('T')[0];
+  const todayEntries = entries.filter(entry => entry.date === today);
+  
   return (
     <Tabs defaultValue="all" className="w-full">
       <div className="flex items-center justify-between mb-4">
@@ -49,25 +52,16 @@ export const EntriesList: React.FC<EntriesListProps> = ({ entries, onDelete, isR
       </TabsContent>
       
       <TabsContent value="today" className="mt-0">
-        {entries.filter(entry => {
-          const today = new Date().toISOString().split('T')[0];
-          return entry.date === today;
-        }).length > 0 ? (
+        {todayEntries.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {entries
-              .filter(entry => {
-                const today = new Date().toISOString().split('T')[0];
-                return entry.date === today;
-              })
-              .map(entry => (
-                <EntryCard 
-                  key={entry.id} 
-                  entry={entry} 
-                  onDelete={onDelete}
-                  isReadOnly={isReadOnly}
-                />
-              ))
-            }
+            {todayEntries.map(entry => (
+              <EntryCard 
+                key={entry.id} 
+                entry={entry} 
+                onDelete={onDelete}
+                isReadOnly={isReadOnly}
+              />
+            ))}
           </div>
         ) : (
           <div className="text-center py-10 glass-card">

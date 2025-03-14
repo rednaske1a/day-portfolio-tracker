@@ -49,16 +49,14 @@ export const EntryCard: React.FC<EntryCardProps> = ({ entry, onDelete, isReadOnl
             {createdAt instanceof Date ? formatTimeSafely(createdAt) : "Invalid time"}
           </span>
           {!isReadOnly && (
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => onDelete(id)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => onDelete(id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           )}
         </div>
       </CardContent>

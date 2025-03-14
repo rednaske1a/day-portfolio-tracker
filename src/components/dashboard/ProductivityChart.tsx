@@ -1,7 +1,10 @@
 
 import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, TooltipProps } from "recharts";
+import { 
+  AreaChart, Area, XAxis, YAxis, Tooltip, 
+  ResponsiveContainer, TooltipProps 
+} from "recharts";
 import { ProductivityEntry } from "@/types/productivity";
 import { calculateAverageScore, prepareChartData } from "@/utils/productivityUtils";
 
@@ -10,19 +13,13 @@ interface ProductivityChartProps {
   days?: number;
 }
 
-type ChartData = {
-  name: string;
-  value: number;
-  date: Date;
-};
-
 const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass-card p-3 border border-white/10 shadow-lg text-sm">
         <p className="font-semibold">{label}</p>
         <p className="font-mono text-productivity-high">
-          Score: {payload[0].value.toFixed(1)}/10
+          Score: {payload[0].value?.toFixed(1)}/10
         </p>
       </div>
     );
@@ -41,7 +38,7 @@ export const ProductivityChart: React.FC<ProductivityChartProps> = ({ entries, d
         <CardTitle className="text-xl flex justify-between items-center">
           Productivity Trend
           <span className="text-base font-mono">
-            Avg: <span className="font-semibold">{averageScore}/10</span>
+            Avg: <span className="font-semibold">{averageScore.toFixed(1)}/10</span>
           </span>
         </CardTitle>
       </CardHeader>

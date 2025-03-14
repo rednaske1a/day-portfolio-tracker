@@ -12,11 +12,11 @@ export const mockUsers: User[] = [
 // Generate sample entries for each user
 export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
   const today = new Date();
-  const yesterday = new Date();
+  const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const twoDaysAgo = new Date();
+  const twoDaysAgo = new Date(today);
   twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-  const threeDaysAgo = new Date();
+  const threeDaysAgo = new Date(today);
   threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
   
   const todayIso = today.toISOString().split('T')[0];
@@ -34,7 +34,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 9,
           category: "Work",
           description: "Finished quarterly report ahead of schedule",
-          createdAt: new Date(today.getTime() - 3 * 60 * 60 * 1000), // 3 hours ago
+          createdAt: new Date(today.getTime() - 3 * 60 * 60 * 1000),
           userId
         },
         {
@@ -43,7 +43,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 7,
           category: "Exercise",
           description: "Morning run - 5km in 25 minutes",
-          createdAt: new Date(yesterday.getTime() - 16 * 60 * 60 * 1000), // 16 hours ago from yesterday
+          createdAt: new Date(yesterday.getTime() - 16 * 60 * 60 * 1000),
           userId
         },
         {
@@ -52,7 +52,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 6,
           category: "Study",
           description: "Completed online course module",
-          createdAt: new Date(twoDaysAgo.getTime() - 5 * 60 * 60 * 1000), // 5 hours ago from two days ago
+          createdAt: new Date(twoDaysAgo.getTime() - 5 * 60 * 60 * 1000),
           userId
         },
       ];
@@ -64,7 +64,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 5,
           category: "Personal Project",
           description: "Worked on home renovation plans",
-          createdAt: new Date(today.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
+          createdAt: new Date(today.getTime() - 4 * 60 * 60 * 1000),
           userId
         },
         {
@@ -73,7 +73,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 8,
           category: "Creative",
           description: "Designed new website mockups",
-          createdAt: new Date(yesterday.getTime() - 10 * 60 * 60 * 1000), // 10 hours ago from yesterday
+          createdAt: new Date(yesterday.getTime() - 10 * 60 * 60 * 1000),
           userId
         },
         {
@@ -82,7 +82,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 9,
           category: "Work",
           description: "Led successful client presentation",
-          createdAt: new Date(threeDaysAgo.getTime() - 9 * 60 * 60 * 1000), // 9 hours ago from three days ago
+          createdAt: new Date(threeDaysAgo.getTime() - 9 * 60 * 60 * 1000),
           userId
         },
       ];
@@ -94,7 +94,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 7,
           category: "Social",
           description: "Networking event with industry professionals",
-          createdAt: new Date(today.getTime() - 6 * 60 * 60 * 1000), // 6 hours ago
+          createdAt: new Date(today.getTime() - 6 * 60 * 60 * 1000),
           userId
         },
         {
@@ -103,7 +103,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 4,
           category: "Study",
           description: "Struggled with new programming concept",
-          createdAt: new Date(yesterday.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago from yesterday
+          createdAt: new Date(yesterday.getTime() - 2 * 60 * 60 * 1000),
           userId
         },
         {
@@ -112,7 +112,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 10,
           category: "Exercise",
           description: "Personal best in deadlift - 140kg",
-          createdAt: new Date(twoDaysAgo.getTime() - 17 * 60 * 60 * 1000), // 17 hours ago from two days ago
+          createdAt: new Date(twoDaysAgo.getTime() - 17 * 60 * 60 * 1000),
           userId
         },
       ];
@@ -125,7 +125,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 8,
           category: "Work",
           description: "Completed major project milestone ahead of schedule",
-          createdAt: new Date(today.getTime() - 6 * 60 * 60 * 1000), // 6 hours ago
+          createdAt: new Date(today.getTime() - 6 * 60 * 60 * 1000),
           userId: "current"
         },
         {
@@ -134,7 +134,7 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 6,
           category: "Study",
           description: "Reviewed course materials and prepared for assessment",
-          createdAt: new Date(yesterday.getTime() - 5 * 60 * 60 * 1000), // 5 hours ago from yesterday
+          createdAt: new Date(yesterday.getTime() - 5 * 60 * 60 * 1000),
           userId: "current"
         },
         {
@@ -143,14 +143,14 @@ export const generateSampleEntries = (userId: string): ProductivityEntry[] => {
           score: 9,
           category: "Exercise",
           description: "Intense workout session and achieved personal best",
-          createdAt: new Date(twoDaysAgo.getTime() - 16 * 60 * 60 * 1000), // 16 hours ago from two days ago
+          createdAt: new Date(twoDaysAgo.getTime() - 16 * 60 * 60 * 1000),
           userId: "current"
         },
       ];
   }
 };
 
-// Load productivity entries from localStorage or generate if not found
+// Load productivity entries
 export const loadProductivityEntries = (userId: string = "current"): ProductivityEntry[] => {
   try {
     const storageKey = userId === "current" ? 'productivity_entries' : `productivity_entries_${userId}`;
@@ -158,7 +158,7 @@ export const loadProductivityEntries = (userId: string = "current"): Productivit
     
     if (storedEntries) {
       const parsedEntries = JSON.parse(storedEntries);
-      // Ensure dates are valid
+      // Convert date strings to Date objects
       return parsedEntries.map((entry: any) => ({
         ...entry,
         createdAt: new Date(entry.createdAt)
@@ -171,12 +171,11 @@ export const loadProductivityEntries = (userId: string = "current"): Productivit
     return sampleEntries;
   } catch (error) {
     console.error("Error loading entries:", error);
-    const sampleEntries = generateSampleEntries(userId);
-    return sampleEntries;
+    return generateSampleEntries(userId);
   }
 };
 
-// Save productivity entries to localStorage
+// Save productivity entries
 export const saveProductivityEntries = (entries: ProductivityEntry[], userId: string = "current") => {
   try {
     const storageKey = userId === "current" ? 'productivity_entries' : `productivity_entries_${userId}`;

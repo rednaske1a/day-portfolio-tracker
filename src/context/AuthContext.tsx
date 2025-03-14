@@ -33,7 +33,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const storedUser = localStorage.getItem("productivity_user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        localStorage.removeItem("productivity_user");
+      }
     }
     setIsLoading(false);
   }, []);
@@ -51,7 +56,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const user = { username };
       localStorage.setItem("productivity_user", JSON.stringify(user));
-      localStorage.setItem("password", password); // In a real app, never store passwords in localStorage
       setUser(user);
       toast.success("Welcome back!", {
         description: `Logged in as ${username}`,
@@ -69,7 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     localStorage.removeItem("productivity_user");
-    localStorage.removeItem("password");
     setUser(null);
     toast.info("You've been logged out");
     navigate("/");

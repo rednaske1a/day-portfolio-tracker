@@ -6,7 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { cn } from "@/lib/utils";
 import { ProductivityEntry } from "@/types/productivity";
-import { calculateAverageScore, getMostProductiveCategory, getProductivityStatus, getTodayScore } from "@/utils/productivityUtils";
+import { 
+  calculateAverageScore, 
+  getMostProductiveCategory, 
+  getProductivityStatus, 
+  getTodayScore 
+} from "@/utils/productivityUtils";
 
 interface ProductivityStatsProps {
   entries: ProductivityEntry[];

@@ -24,8 +24,7 @@ export const getProductivityStatus = (score: number) => {
 // Safe date formatting with robust error handling
 export const formatDateSafely = (dateString: string) => {
   try {
-    // Handle both ISO strings and date objects
-    return format(typeof dateString === 'string' ? parseISO(dateString) : dateString, "MMMM d, yyyy");
+    return format(parseISO(dateString), "MMMM d, yyyy");
   } catch (error) {
     console.error("Date formatting error:", error, "Invalid date:", dateString);
     return "Invalid date";
@@ -34,7 +33,7 @@ export const formatDateSafely = (dateString: string) => {
 
 export const formatTimeSafely = (dateObj: Date) => {
   try {
-    return format(new Date(dateObj), "h:mm a");
+    return format(dateObj, "h:mm a");
   } catch (error) {
     console.error("Time formatting error:", error, "Invalid date object:", dateObj);
     return "Invalid time";
@@ -51,10 +50,8 @@ export const calculateAverageScore = (entries: ProductivityEntry[]): number => {
 export const getTodayScore = (entries: ProductivityEntry[]): number => {
   const today = new Date().toISOString().split('T')[0];
   const todayEntries = entries.filter(entry => entry.date === today);
-  if (todayEntries.length === 0) return 0;
-  
-  const sum = todayEntries.reduce((acc, entry) => acc + entry.score, 0);
-  return parseFloat((sum / todayEntries.length).toFixed(1));
+  return todayEntries.length === 0 ? 0 : 
+    parseFloat((todayEntries.reduce((acc, entry) => acc + entry.score, 0) / todayEntries.length).toFixed(1));
 };
 
 export const getMostProductiveCategory = (entries: ProductivityEntry[]): string => {
@@ -84,7 +81,7 @@ export const getMostProductiveCategory = (entries: ProductivityEntry[]): string 
   return bestCategory;
 };
 
-// Chart data preparation with proper error handling
+// Chart data preparation
 export const prepareChartData = (entries: ProductivityEntry[], days = 7) => {
   const today = new Date();
   // Create an array representing the last [days] days
@@ -111,7 +108,7 @@ export const prepareChartData = (entries: ProductivityEntry[], days = 7) => {
         }
       }
     } catch (error) {
-      console.error("Error processing entry date:", error, "Entry:", entry);
+      console.error("Error processing entry date:", error);
     }
   });
 

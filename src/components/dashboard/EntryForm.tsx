@@ -1,24 +1,13 @@
 
 import React, { useState } from "react";
 import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogContent, DialogDescription, DialogFooter, 
+  DialogHeader, DialogTitle, DialogTrigger 
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -46,18 +35,19 @@ export const EntryForm: React.FC<EntryFormProps> = ({ onAddEntry }) => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Create new entry
+    const newEntry: ProductivityEntry = {
+      id: crypto.randomUUID(),
+      date: new Date().toISOString().split('T')[0],
+      score,
+      category: category || "Other",
+      description,
+      createdAt: new Date(),
+      userId: "current"
+    };
+    
     // Simulate network delay
     setTimeout(() => {
-      const newEntry: ProductivityEntry = {
-        id: crypto.randomUUID(),
-        date: new Date().toISOString().split('T')[0],
-        score,
-        category: category || "Other",
-        description,
-        createdAt: new Date(),
-        userId: "current"
-      };
-      
       onAddEntry(newEntry);
       toast.success("Entry added successfully", {
         description: `You added a new ${category || "Other"} entry with a score of ${score}/10`,
@@ -78,9 +68,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({ onAddEntry }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          className="gap-2 h-11 bg-primary hover:brightness-110 transition-all shadow-lg px-4 hover:scale-[1.02] active:scale-[0.98]"
-        >
+        <Button className="gap-2 h-11 bg-primary hover:brightness-110 transition-all shadow-lg px-4 hover:scale-[1.02] active:scale-[0.98]">
           <PlusCircle className="h-5 w-5" />
           <span>Add Entry</span>
         </Button>
