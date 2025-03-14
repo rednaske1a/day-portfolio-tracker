@@ -12,7 +12,10 @@ export interface ProductivityEntry {
 export interface User {
   id: string;
   name: string;
+  email: string;
+  handle: string;
   avatar?: string;
+  verified?: boolean;
 }
 
 export const PRODUCTIVITY_CATEGORIES = [

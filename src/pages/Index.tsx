@@ -1,12 +1,15 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { AuthForm } from "@/components/auth/AuthForm";
+import { RegisterForm } from "@/components/auth/RegisterForm";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { BarChart2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const { isAuthenticated, isLoading } = useAuth();
+  const [showLogin, setShowLogin] = useState(true);
 
   if (isLoading) {
     return (
@@ -34,7 +37,21 @@ const Index = () => {
           Track your productivity like a financial portfolio
         </p>
       </div>
-      <AuthForm />
+      
+      {showLogin ? <AuthForm /> : <RegisterForm />}
+      
+      <div className="mt-6 text-center">
+        <p className="text-muted-foreground">
+          {showLogin ? "Don't have an account?" : "Already have an account?"}
+        </p>
+        <Button 
+          variant="link" 
+          className="mt-1" 
+          onClick={() => setShowLogin(!showLogin)}
+        >
+          {showLogin ? "Create an account" : "Sign in"}
+        </Button>
+      </div>
     </div>
   );
 };
