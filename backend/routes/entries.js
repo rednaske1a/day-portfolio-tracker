@@ -8,7 +8,8 @@ const router = express.Router();
 // Get all entries for the current user
 router.get('/', async (req, res) => {
   try {
-    const entries = await Entry.find({ userId: req.user._id }).sort({ date: -1 });
+    const db = req.app.locals.db;
+    const entries = await Entry.findByUserId(db, req.user.id);
     res.json(entries);
   } catch (error) {
     console.error('Get entries error:', error);
@@ -34,16 +35,17 @@ router.post(
 
     try {
       const { date, score, category, description } = req.body;
+      const db = req.app.locals.db;
 
       const entry = new Entry({
-        userId: req.user._id,
+        userId: req.user.id,
         date,
         score,
         category,
         description,
       });
 
-      await entry.save();
+      await entry.save(db);
       res.status(201).json(entry);
     } catch (error) {
       console.error('Add entry error:', error);
@@ -70,23 +72,26 @@ router.put(
     try {
       const { id } = req.params;
       const updates = req.body;
+      const db = req.app.locals.db;
 
       // Find entry and check ownership
-      const entry = await Entry.findById(id);
+      const entry = await Entry.findById(db, id);
       if (!entry) {
         return res.status(404).json({ message: 'Entry not found' });
       }
 
-      if (entry.userId.toString() !== req.user._id.toString()) {
+      if (entry.userId !== req.user.id) {
         return res.status(403).json({ message: 'Not authorized' });
       }
 
       // Update entry
       Object.keys(updates).forEach(key => {
-        entry[key] = updates[key];
+        if (updates[key] !== undefined) {
+          entry[key] = updates[key];
+        }
       });
 
-      await entry.save();
+      await entry.update(db);
       res.json(entry);
     } catch (error) {
       console.error('Update entry error:', error);
@@ -99,19 +104,20 @@ router.put(
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    const db = req.app.locals.db;
 
     // Find entry and check ownership
-    const entry = await Entry.findById(id);
+    const entry = await Entry.findById(db, id);
     if (!entry) {
       return res.status(404).json({ message: 'Entry not found' });
     }
 
-    if (entry.userId.toString() !== req.user._id.toString()) {
+    if (entry.userId !== req.user.id) {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
     // Delete entry
-    await Entry.findByIdAndDelete(id);
+    await Entry.deleteById(db, id);
     res.json({ message: 'Entry deleted' });
   } catch (error) {
     console.error('Delete entry error:', error);

@@ -26,19 +26,20 @@ router.post(
 
     try {
       const { username, email, handle, password } = req.body;
+      const db = req.app.locals.db;
 
       // Check if email or username already exists
-      const emailExists = await User.findOne({ email });
+      const emailExists = await User.findByEmail(db, email);
       if (emailExists) {
         return res.status(400).json({ message: 'Email already registered' });
       }
 
-      const usernameExists = await User.findOne({ username });
+      const usernameExists = await User.findByUsername(db, username);
       if (usernameExists) {
         return res.status(400).json({ message: 'Username already taken' });
       }
 
-      const handleExists = await User.findOne({ handle });
+      const handleExists = await User.findByHandle(db, handle);
       if (handleExists) {
         return res.status(400).json({ message: 'Handle already taken' });
       }
@@ -51,11 +52,11 @@ router.post(
         username,
         email,
         handle,
-        password,
         verificationToken,
       });
-
-      await user.save();
+      
+      user.setPassword(password);
+      await user.save(db);
 
       // Send verification email
       const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
@@ -63,7 +64,7 @@ router.post(
 
       // Generate JWT token
       const token = jwt.sign(
-        { userId: user._id },
+        { userId: user.id },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
@@ -96,9 +97,10 @@ router.post(
 
     try {
       const { email, password } = req.body;
+      const db = req.app.locals.db;
 
       // Find user by email
-      const user = await User.findOne({ email });
+      const user = await User.findByEmail(db, email);
       if (!user) {
         return res.status(401).json({ message: 'Invalid email or password' });
       }
@@ -111,7 +113,7 @@ router.post(
 
       // Generate JWT token
       const token = jwt.sign(
-        { userId: user._id },
+        { userId: user.id },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
@@ -132,10 +134,11 @@ router.post(
 router.get('/verify-email/:token', async (req, res) => {
   try {
     const { token } = req.params;
+    const db = req.app.locals.db;
 
     // Find user with verification token
-    const user = await User.findOne({ verificationToken: token });
-    if (!user) {
+    const [rows] = await db.query('SELECT * FROM users WHERE verificationToken = ?', [token]);
+    if (!rows.length) {
       return res.json({ 
         success: false, 
         message: 'Invalid verification token' 
@@ -143,9 +146,10 @@ router.get('/verify-email/:token', async (req, res) => {
     }
 
     // Update user verification status
+    const user = new User(rows[0]);
     user.verified = true;
-    user.verificationToken = undefined;
-    await user.save();
+    user.verificationToken = null;
+    await user.update(db);
 
     res.json({ 
       success: true, 
