@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
         {user && (
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium hidden sm:inline-block">
-              {user.username}
+              {user.name} {/* Changed from username to name */}
             </span>
             <Button variant="ghost" size="sm" onClick={logout} className="gap-2">
               <LogOut className="h-4 w-4" />

@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { AtSign, LockKeyhole, UserCircle2, AtSymbol } from "lucide-react";
+import { AtSign, LockKeyhole, UserCircle2, AtSign as HandleIcon } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -113,7 +113,7 @@ export function RegisterForm() {
             <div className="space-y-2">
               <Label htmlFor="handle">Handle</Label>
               <div className="relative">
-                <AtSymbol className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <HandleIcon className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="handle"
                   className="pl-10 h-12"

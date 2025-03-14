@@ -13,7 +13,7 @@ import {
   deleteProductivityEntry, 
   getUsers, 
   loadProductivityEntries, 
-  saveProductivityEntries
+  saveProductivityEntries 
 } from "@/services/productivityService";
 
 export const Dashboard: React.FC = () => {
